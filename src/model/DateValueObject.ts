@@ -52,4 +52,8 @@ export class DateValueObject {
     equals(someDate: DateValueObject): boolean {
         return +this.date === +someDate.date;
     }
+
+    toString(){
+        return this.date.toISOString();
+    }
 }
