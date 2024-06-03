@@ -1,0 +1,10 @@
+node_modules
+.vscode
+dist
+coverage
+.nyc_output
+sandbox.*
+.env
+/database.json
+allure-results
+/docker-compose.override.yml

@@ -1,0 +1,179 @@
+{
+    "env": {
+        "es6": true,
+        "es2017": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:sonarjs/recommended",
+        "plugin:unicorn/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "tsconfig.json",
+        "tsconfigRootDir": "."
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "sonarjs",
+        "unicorn",
+        "eslint-plugin-import"
+    ],
+    "rules": {
+        "no-import-assign": "off",
+        "arrow-spacing": "error",
+        "arrow-parens": ["error", "always"],
+        "comma-dangle": ["error", "never"],
+        "curly": "off",
+        "no-prototype-builtins": "off",
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "keyword-spacing": ["error", { "after": true }],
+        "key-spacing": ["error", { "afterColon": true }],
+        "no-case-declarations": "off",
+        "no-console": "off",
+        "no-extra-boolean-cast": "off",
+        "no-lonely-if": ["error"],
+        "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 0, "maxBOF": 0 }],
+        "no-multi-spaces": "error",
+        "no-var": "error",
+        "object-shorthand": ["error", "always"],
+        "operator-linebreak": ["error", "after"],
+        "one-var": ["error", "never"],
+        "quotes": ["error", "double"],
+        "quote-props": ["error", "as-needed"],
+        "semi": ["error", "always"],
+        "space-before-blocks": "error",
+        "max-classes-per-file": ["error", 1],
+        "space-before-function-paren": ["error", {
+            "anonymous": "never",
+            "named": "never",
+            "asyncArrow": "always"
+        }],
+        "space-infix-ops": ["error"],
+        "sonarjs/prefer-immediate-return": 0,
+        "sonarjs/cognitive-complexity": ["error", 6],
+        "sonarjs/no-duplicate-string": "off",
+        "unicorn/filename-case": [
+            "error", {
+                "cases": {
+                    "pascalCase": true,
+                    "camelCase": true
+                }
+            }
+        ],
+        "unicorn/no-process-exit": "off",
+        "unicorn/prefer-node-protocol": "off",
+        "unicorn/prevent-abbreviations": [
+            "error",
+            {
+                "allowList": {
+                    "params": true,
+                    "Params": true,
+                    "err": true,
+                    "i": true,
+                    "j": true,
+                    "prev": true,
+                    "args": true,
+                    "tmp": true,
+                    "db": true,
+                    "vars": true,
+                    "env": true
+                },
+                "replacements": {
+                    "tmp": false,
+                    "env": false
+                }
+            }
+        ],
+        "class-methods-use-this": "error",
+        "@typescript-eslint/brace-style": ["error", "stroustrup"],
+        "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+        "@typescript-eslint/dot-notation": "error",
+        "@typescript-eslint/func-call-spacing": "error",
+        "@typescript-eslint/keyword-spacing": "error",
+        "@typescript-eslint/lines-between-class-members": [
+            "error",
+            "always",
+            {"exceptAfterSingleLine": true}
+        ],
+        "@typescript-eslint/member-delimiter-style": "error",
+        "@typescript-eslint/no-array-constructor": "error",
+        "@typescript-eslint/no-confusing-void-expression": [
+            "error",
+            {"ignoreArrowShorthand": true}
+        ],
+        "import/no-duplicates": "error",
+        "@typescript-eslint/no-empty-interface": [
+            "error",
+            {"allowSingleExtends": false}
+        ],
+        "@typescript-eslint/restrict-template-expressions": ["error", {
+            "allowNumber": true,
+            "allowBoolean": true,
+            "allowNullish": true,
+            "allowRegExp": true
+        }],
+        "@typescript-eslint/no-extra-parens": ["off"],
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-magic-numbers": "off",
+        "unicorn/prefer-ternary": "off",
+        "unicorn/no-array-push-push": "off",
+        "no-trailing-spaces": ["error", {"ignoreComments": true}],
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "unicorn/prefer-module": "off",
+        "unicorn/no-array-callback-reference": "off",
+        "unicorn/prefer-set-has": "off",
+        "unicorn/no-null": "off",
+        "unicorn/no-useless-undefined": "off",
+        "unicorn/prefer-top-level-await": "off"
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/*.spec.ts",
+                "**/Fake*.ts",
+                "**/fixture.ts",
+                "**/fixture/*.ts"
+            ],
+            "rules": {
+                "@typescript-eslint/no-non-null-assertion": "off",
+                "@typescript-eslint/no-magic-numbers": "off",
+                "max-classes-per-file": "off",
+                "sonarjs/cognitive-complexity": "off",
+                "sonarjs/no-identical-functions": "off",
+                "@typescript-eslint/no-unsafe-member-access": "off",
+                "class-methods-use-this": "off",
+                "sonarjs/no-duplicate-string": "off",
+                "unicorn/consistent-function-scoping": "off",
+                "@typescript-eslint/require-await": "off"
+            }
+        },
+        {
+            "files": [
+                "src/scripts/*.ts"
+            ],
+            "rules": {
+                "unicorn/consistent-function-scoping": "off"
+            }
+        },
+        {
+            "files": ["*.js"],
+            "rules": {
+                "@typescript-eslint/no-var-requires": "off"
+            }
+        },
+        {
+            "files": [
+                "**/driver/**/*.ts"
+            ],
+            "rules": {
+                "class-methods-use-this": "off"
+            }
+        }
+    ]
+}

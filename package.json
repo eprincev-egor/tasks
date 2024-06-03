@@ -1,0 +1,67 @@
+{
+  "name": "task",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc mocha --bail"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "all": true,
+    "exclude": [
+      "coverage",
+      ".mocharc.js",
+      "dev-stuff",
+      "src/sandbox.ts",
+      "src/config.ts",
+      "src/index.ts",
+      "dist",
+      "migrations",
+      "webpack.config.js"
+    ]
+  },
+  "mocha": {
+    "recursive": true,
+    "exit": true,
+    "timeout": 10000,
+    "spec": [
+      "**/*.spec.ts"
+    ],
+    "require": [
+      "source-map-support/register",
+      "ts-node/register"
+    ]
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.4",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.24",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.1.0",
+    "@typescript-eslint/parser": "^7.1.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-sonarjs": "^0.24.0",
+    "eslint-plugin-unicorn": "^51.0.1",
+    "mocha": "^10.3.0",
+    "nyc": "^15.1.0",
+    "source-map-support": "^0.5.21",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "uuid": "^9.0.1"
+  }
+}
