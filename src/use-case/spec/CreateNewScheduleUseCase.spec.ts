@@ -1,6 +1,6 @@
 import { CreateMissedSchedulesUseCase } from "../CreateMissedSchedulesUseCase";
 import { DateValueObject, ScheduleModel } from "../../model";
-import { FakeContext, createFake } from "./CreateMissedSchedulesUseCase.fixture";
+import { FakeContext, createFake } from "./common.fixture";
 
 describe("CreateMissedSchedulesUseCase", () => {
 
