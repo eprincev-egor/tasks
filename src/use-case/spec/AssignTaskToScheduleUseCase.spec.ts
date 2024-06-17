@@ -4,6 +4,8 @@ import { UnknownEmployeeIdDomainError } from "../../model/error";
 import { UnknownTaskIdDomainError } from "../../model/error/UnknownTaskIdDomainError";
 import { MissedScheduleDomainError } from "../../model/error/MissedScheduleDomainError";
 import { strict } from "assert";
+import { DateIntervalValueObject } from "../../model/DateIntervalValueObject";
+import { HoursValueObject } from "../../model";
 
 describe.only("AssignTaskToScheduleUseCase", () => {
 
@@ -39,7 +41,10 @@ describe.only("AssignTaskToScheduleUseCase", () => {
     it("should reject task if not exist schedule", async () => {
         await strict.rejects(
             assignTaskToSchedule({
-                date: now.plusMonth()
+                time: new DateIntervalValueObject(
+                    now.plusMonth(),
+                    new HoursValueObject(1)
+                )
             }),
             MissedScheduleDomainError
         );
@@ -63,6 +68,24 @@ describe.only("AssignTaskToScheduleUseCase", () => {
         });
     });
 
+    it("should assign task to correct date/time", async () => {
+        await assignTaskToSchedule();
+
+        fake.schedules.wasSaved({
+            id: fixture.schedule.id,
+            items: [{time: fixture.wholeDay}]
+        });
+    });
+
+    it("should reject second task if employee is busy", async () => {
+        // Arrange
+        await assignTaskToSchedule();
+
+        await strict.rejects(
+            assignTaskToSchedule()
+        );
+    });
+
     async function assignTaskToSchedule(dto: Partial<AssignTaskToScheduleDto> = {}) {
         const assignTaskToSchedule = new AssignTaskToScheduleUseCase(
             fake.schedules,
@@ -72,7 +95,7 @@ describe.only("AssignTaskToScheduleUseCase", () => {
         await assignTaskToSchedule.execute({
             employeeId: fixture.employee.id,
             taskId: fixture.task.id,
-            date: now,
+            time: fixture.wholeDay,
             ...dto
         });
     }

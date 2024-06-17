@@ -1,7 +1,5 @@
 import { DateValueObject } from "./DateValueObject";
-import { EmployeeModel } from "./EmployeeModel";
-import { ScheduleItemModel } from "./ScheduleItemModel";
-import { TaskModel } from "./TaskModel";
+import { ScheduleItemModel, ScheduleItemParams } from "./ScheduleItemModel";
 import { PickProperties, uuid } from "./utils";
 
 export class ScheduleModel {
@@ -23,8 +21,8 @@ export class ScheduleModel {
         Object.assign(this, params);
     }
 
-    assignTask(task: TaskModel, employee: EmployeeModel) {
-        const item = ScheduleItemModel.create(task, employee);
+    assignTask(itemParams: ScheduleItemParams) {
+        const item = ScheduleItemModel.create(itemParams);
         this.items.push(item);
     }
 }

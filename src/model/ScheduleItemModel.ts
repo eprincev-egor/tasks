@@ -1,23 +1,27 @@
+import { DateIntervalValueObject } from "./DateIntervalValueObject";
 import { EmployeeModel } from "./EmployeeModel";
-import { HoursValueObject } from "./HoursValueObject";
 import { TaskModel } from "./TaskModel";
 import { PickProperties, uuid } from "./utils";
 
+export interface ScheduleItemParams {
+    task: TaskModel;
+    employee: EmployeeModel;
+    time: DateIntervalValueObject;
+}
+
 export class ScheduleItemModel {
 
-    static create(task: TaskModel, employee: EmployeeModel) {
+    static create(params: ScheduleItemParams) {
         return new ScheduleItemModel({
             id: uuid(),
-            sort: 0,
-            duration: new HoursValueObject(0),
-            employee,
-            task
+            time: params.time,
+            employee: params.employee,
+            task: params.task
         });
     }
 
     readonly id!: string;
-    readonly sort!: number;
-    readonly duration!: HoursValueObject;
+    readonly time!: DateIntervalValueObject;
     readonly employee!: EmployeeModel;
     readonly task!: TaskModel;
     constructor(params: PickProperties<ScheduleItemModel>) {

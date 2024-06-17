@@ -1,4 +1,4 @@
-import { DateValueObject } from "../model";
+import { DateValueObject, HoursValueObject } from "../model";
 import { EmployeeModel } from "../model/EmployeeModel";
 import { TaskModel } from "../model/TaskModel";
 import { ScheduleRepository } from "../repository/interface";
@@ -6,11 +6,12 @@ import {FakeTaskRepository} from "../repository/fake/FakeTaskRepository";
 import {FakeEmployeeRepository} from "../repository/fake/FakeEmployeeRepository";
 import {UnknownEmployeeIdDomainError, UnknownTaskIdDomainError} from "../model/error";
 import {MissedScheduleDomainError} from "../model/error/MissedScheduleDomainError";
+import { DateIntervalValueObject } from "../model/DateIntervalValueObject";
 
 export interface AssignTaskToScheduleDto {
     employeeId: EmployeeModel["id"];
     taskId: TaskModel["id"];
-    date: DateValueObject;
+    time: DateIntervalValueObject;
 }
 
 export class AssignTaskToScheduleUseCase {
@@ -24,13 +25,16 @@ export class AssignTaskToScheduleUseCase {
     async execute(dto: AssignTaskToScheduleDto) {
         const task = await this.tasks.findOne(dto.taskId);
         const employee = await this.employers.findOne(dto.employeeId);
-        const schedule = await this.schedules.findOneWithDate(dto.date);
+        const schedule = await this.schedules.findOneWithDate(dto.time.date);
 
         if (!task) throw new UnknownTaskIdDomainError(dto.taskId);
         if (!employee) throw new UnknownEmployeeIdDomainError(dto.employeeId);
-        if (!schedule) throw new MissedScheduleDomainError(dto.date);
+        if (!schedule) throw new MissedScheduleDomainError(dto.time.date);
 
-        schedule.assignTask(task, employee);
+        schedule.assignTask({
+            task, employee,
+            time: dto.time
+        });
         await this.schedules.save(schedule);
     }
 }

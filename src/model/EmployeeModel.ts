@@ -1,13 +1,16 @@
 import {PickProperties, uuid} from "./utils";
 
 export class EmployeeModel {
-    static create(){
+
+    static create(name: string) {
         return new EmployeeModel({
             id: uuid(),
-        })
+            name
+        });
     }
 
     readonly id!: string;
+    readonly name!: string;
     constructor(params: PickProperties<EmployeeModel>) {
         Object.assign(this, params);
     }
