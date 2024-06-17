@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { matchedFields } from "./utils";
+import { DeepPartial, matchedFields, shallowDeepEqual } from "./utils";
 import { clone } from "lodash";
 import { strict } from "assert";
 
@@ -15,26 +15,17 @@ export class BaseFakeRepository<TModel extends { id: string }> {
 
     /* istanbul ignore next */
     /** ASSERT UTILS FOR TESTS ONLY: throw error if model was not saved with concrete data */
-    wasSaved(expectedModel: Partial<TModel>) {
+    wasSaved(expectedModel: DeepPartial<TModel>) {
         const actualBestMatchedModel = this.models.filter((model) =>
             matchedFields(model, expectedModel).length > 0
         ).sort((a, b) =>
             matchedFields(a, expectedModel).length -
             matchedFields(b, expectedModel).length
         ).pop();
-        strict.ok(actualBestMatchedModel, `should be saved model: ${JSON.stringify(expectedModel, null, 4)}`);
+        strict.ok(actualBestMatchedModel, `not found model: ${JSON.stringify(expectedModel, null, 4)}`);
         strict.ok(actualBestMatchedModel.id in this.savesMap, `should be called method ${this.constructor.name}.save() for model: ${JSON.stringify(expectedModel, null, 4)}`);
 
-        for (const key in expectedModel) {
-            const expectedValue = expectedModel[key] as unknown;
-            const actualValue = actualBestMatchedModel[key] as unknown;
-
-            strict.equal(
-                JSON.stringify(actualValue),
-                JSON.stringify(expectedValue),
-                `expected ${key}=${JSON.stringify(expectedValue)}, but got: ${JSON.stringify(actualValue)}`
-            );
-        }
+        shallowDeepEqual(expectedModel, actualBestMatchedModel);
     }
 
     /* istanbul ignore next */
