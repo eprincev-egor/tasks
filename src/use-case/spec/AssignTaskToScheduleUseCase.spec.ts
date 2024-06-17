@@ -1,65 +1,80 @@
-import { strict } from "assert";
-import { AssignTaskToScheduleUseCase } from "../AssignTaskToScheduleUseCase";
-import { FakeContext, createFake } from "./common.fixture";
-import {DateValueObject, EmployeeModel, TaskModel} from "../../model";
+import { AssignTaskToScheduleDto, AssignTaskToScheduleUseCase } from "../AssignTaskToScheduleUseCase";
+import { CommonFixture, FakeContext, createFake, createFixture, now } from "./common.fixture";
 import { UnknownEmployeeIdDomainError } from "../../model/error";
-import {UnknownTaskIdDomainError} from "../../model/error/UnknownTaskIdDomainError";
-import {MissedScheduleDomainError} from "../../model/error/MissedScheduleDomainError";
+import { UnknownTaskIdDomainError } from "../../model/error/UnknownTaskIdDomainError";
+import { MissedScheduleDomainError } from "../../model/error/MissedScheduleDomainError";
+import { strict } from "assert";
 
 describe.only("AssignTaskToScheduleUseCase", () => {
 
-    let assignTaskToSchedule: AssignTaskToScheduleUseCase;
     let fake: FakeContext;
+    let fixture: CommonFixture;
     beforeEach(() => {
         fake = createFake();
-        assignTaskToSchedule = new AssignTaskToScheduleUseCase(
-            fake.schedules,
-            fake.tasks,
-            fake.employers
-        );
+        fixture = createFixture();
+
+        fake.employers.set(fixture.employee);
+        fake.tasks.set(fixture.task);
+        fake.schedules.set(fixture.schedule);
     });
 
     it("should reject unknown employee", async () => {
-        const task = TaskModel.create()
-        fake.tasks.set(task)
-
         await strict.rejects(
-            assignTaskToSchedule.execute({
-                employeeId: "unknown",
-                taskId: task.id,
-                date: DateValueObject.now()
+            assignTaskToSchedule({
+                employeeId: "unknown"
             }),
             UnknownEmployeeIdDomainError
         );
     });
 
     it("should reject unknown task", async () => {
-        const employee = EmployeeModel.create()
-        fake.employers.set(employee)
-
         await strict.rejects(
-            assignTaskToSchedule.execute({
-                employeeId: employee.id,
-                taskId: "unknown",
-                date: DateValueObject.now()
+            assignTaskToSchedule({
+                taskId: "unknown"
             }),
             UnknownTaskIdDomainError
         );
     });
 
     it("should reject task if not exist schedule", async () => {
-        const task = TaskModel.create()
-        const employee = EmployeeModel.create()
-        fake.employers.set(employee)
-        fake.tasks.set(task)
-
         await strict.rejects(
-            assignTaskToSchedule.execute({
-                employeeId: employee.id,
-                taskId: task.id,
-                date: DateValueObject.now()
+            assignTaskToSchedule({
+                date: now.plusMonth()
             }),
             MissedScheduleDomainError
         );
-    })
+    });
+
+    it("should assign task", async () => {
+        await assignTaskToSchedule();
+
+        fake.schedules.wasSaved({
+            id: fixture.schedule.id,
+            items: [{task: fixture.task}]
+        });
+    });
+
+    it("should assign task to correct employee", async () => {
+        await assignTaskToSchedule();
+
+        fake.schedules.wasSaved({
+            id: fixture.schedule.id,
+            items: [{employee: fixture.employee}]
+        });
+    });
+
+    async function assignTaskToSchedule(dto: Partial<AssignTaskToScheduleDto> = {}) {
+        const assignTaskToSchedule = new AssignTaskToScheduleUseCase(
+            fake.schedules,
+            fake.tasks,
+            fake.employers
+        );
+        await assignTaskToSchedule.execute({
+            employeeId: fixture.employee.id,
+            taskId: fixture.task.id,
+            date: now,
+            ...dto
+        });
+    }
+
 });

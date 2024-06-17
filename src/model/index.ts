@@ -1,3 +1,4 @@
+export * from "./error";
 export * from "./DateValueObject";
 export * from "./EmployeeModel";
 export * from "./HoursValueObject";

@@ -30,5 +30,7 @@ export class AssignTaskToScheduleUseCase {
         if (!employee) throw new UnknownEmployeeIdDomainError(dto.employeeId);
         if (!schedule) throw new MissedScheduleDomainError(dto.date);
 
+        schedule.assignTask(task, employee);
+        await this.schedules.save(schedule);
     }
 }
