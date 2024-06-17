@@ -6,9 +6,9 @@ export class FakeScheduleRepository
     extends BaseFakeRepository<ScheduleModel>
     implements ScheduleRepository {
 
-    async findOne(startMonthDate: DateValueObject): Promise<ScheduleModel | undefined> {
+    async findOneWithDate(startMonthDate: DateValueObject): Promise<ScheduleModel | undefined> {
         return this.getBy((model) =>
-            model.startDate.equals(startMonthDate)
+            model.startDate.equals(startMonthDate.toMonthStart())
         );
     }
 }

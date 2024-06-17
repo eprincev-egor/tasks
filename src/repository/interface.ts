@@ -4,7 +4,7 @@ import { ScheduleModel } from "../model/ScheduleModel";
 import { TaskModel } from "../model/TaskModel";
 
 export interface ScheduleRepository {
-    findOne(startMonthDate: DateValueObject): Promise<ScheduleModel | undefined>;
+    findOneWithDate(startMonthDate: DateValueObject): Promise<ScheduleModel | undefined>;
     save(model: ScheduleModel): Promise<void>;
 }
 

@@ -24,10 +24,11 @@ export class AssignTaskToScheduleUseCase {
     async execute(dto: AssignTaskToScheduleDto) {
         const task = await this.tasks.findOne(dto.taskId);
         const employee = await this.employers.findOne(dto.employeeId);
-        const schedule = await this.schedules.findOne(dto.date);
+        const schedule = await this.schedules.findOneWithDate(dto.date);
 
         if (!task) throw new UnknownTaskIdDomainError(dto.taskId);
         if (!employee) throw new UnknownEmployeeIdDomainError(dto.employeeId);
         if (!schedule) throw new MissedScheduleDomainError(dto.date);
+
     }
 }

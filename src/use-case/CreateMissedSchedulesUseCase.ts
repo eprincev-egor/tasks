@@ -16,7 +16,7 @@ export class CreateMissedSchedulesUseCase {
     }
 
     private async createIfNotExistsFor(month: DateValueObject) {
-        const existentSchedule = await this.schedules.findOne(month.toMonthStart());
+        const existentSchedule = await this.schedules.findOneWithDate(month.toMonthStart());
         if ( existentSchedule ) return;
 
         const schedule = ScheduleModel.createForMonth(month);
