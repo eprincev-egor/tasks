@@ -1,7 +1,7 @@
 import { FakeScheduleRepository } from "../../repository/fake";
 import { FakeTaskRepository } from "../../repository/fake/FakeTaskRepository";
 import { FakeEmployeeRepository } from "../../repository/fake/FakeEmployeeRepository";
-import { DateValueObject, EmployeeModel, HoursValueObject, ScheduleModel, TaskModel } from "../../model";
+import { DateValueObject, EmployeeModel, ScheduleModel, TaskModel, WORK_DAY_DURATION } from "../../model";
 import { DateIntervalValueObject } from "../../model/DateIntervalValueObject";
 
 export interface FakeContext {
@@ -35,8 +35,7 @@ export function createFixture(): CommonFixture {
         employee: EmployeeModel.create("Oliver Twist"),
         employee2: EmployeeModel.create("Mark Twain"),
         wholeDay: DateIntervalValueObject.create(
-            now.toWorkDayStart(),
-            new HoursValueObject(8)
+            now.toWorkDayStart(), WORK_DAY_DURATION
         ),
         schedule: ScheduleModel.createForMonth(now)
     };

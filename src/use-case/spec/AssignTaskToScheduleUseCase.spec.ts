@@ -1,10 +1,10 @@
 import { AssignTaskToScheduleDto, AssignTaskToScheduleUseCase } from "../AssignTaskToScheduleUseCase";
 import { CommonFixture, FakeContext, createFake, createFixture, now } from "./common.fixture";
-import { UnknownEmployeeIdDomainError } from "../../model/error";
+import { TooLateForNewTaskDomainError, UnknownEmployeeIdDomainError } from "../../model/error";
 import { UnknownTaskIdDomainError } from "../../model/error/UnknownTaskIdDomainError";
 import { MissedScheduleDomainError } from "../../model/error/MissedScheduleDomainError";
 import { DateIntervalValueObject } from "../../model/DateIntervalValueObject";
-import { HoursValueObject } from "../../model";
+import { DateValueObject, WORK_DAY_DURATION } from "../../model";
 import { BusyEmployeeDomainError } from "../../model/error/BusyEmployeeDomainError";
 import { strict } from "assert";
 
@@ -42,10 +42,7 @@ describe.only("AssignTaskToScheduleUseCase", () => {
     it("should reject task if not exist schedule", async () => {
         await strict.rejects(
             assignTaskToSchedule({
-                time: DateIntervalValueObject.create(
-                    now.plusMonth(),
-                    new HoursValueObject(1)
-                )
+                time: DateIntervalValueObject.create(now.plusMonth(), 1)
             }),
             MissedScheduleDomainError
         );
@@ -90,11 +87,13 @@ describe.only("AssignTaskToScheduleUseCase", () => {
 
     it("should assign task if next task starts immediately after previous", async () => {
         // Arrange
-        await assignTaskToSchedule({ time: fixture.wholeDay });
-        const immediatelyNextTaskTime = DateIntervalValueObject.create(
-            fixture.wholeDay.endDate,
-            new HoursValueObject(4)
+        const someTaskTime = DateIntervalValueObject.create(
+            DateValueObject.now().toWorkDayStart(), 4
         );
+        const immediatelyNextTaskTime = DateIntervalValueObject.create(
+            someTaskTime.endDate, 4
+        );
+        await assignTaskToSchedule({ time: someTaskTime });
 
         // Act
         await assignTaskToSchedule({ time: immediatelyNextTaskTime });
@@ -103,7 +102,7 @@ describe.only("AssignTaskToScheduleUseCase", () => {
         fake.schedules.wasSaved({
             id: fixture.schedule.id,
             items: [
-                {time: fixture.wholeDay},
+                {time: someTaskTime},
                 {time: immediatelyNextTaskTime}
             ]
         });
@@ -132,6 +131,18 @@ describe.only("AssignTaskToScheduleUseCase", () => {
                 {employee: fixture.employee2, time: sameTime}
             ]
         });
+    });
+
+    it("should reject task on end of work day", async () => {
+        const oneHourBeforeEndOfDay = DateValueObject.now().toWorkDayStart()
+            .plusHours(WORK_DAY_DURATION - 1);
+
+        await strict.rejects(
+            assignTaskToSchedule({
+                time: DateIntervalValueObject.create(oneHourBeforeEndOfDay, 1)
+            }),
+            TooLateForNewTaskDomainError
+        );
     });
 
     async function assignTaskToSchedule(dto: Partial<AssignTaskToScheduleDto> = {}) {

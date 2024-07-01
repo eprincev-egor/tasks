@@ -1,6 +1,7 @@
 import { DateIntervalValueObject } from "./DateIntervalValueObject";
 import { EmployeeModel } from "./EmployeeModel";
 import { TaskModel } from "./TaskModel";
+import { TooLateForNewTaskDomainError } from "./error";
 import { PickProperties, uuid } from "./utils";
 
 export interface ScheduleItemParams {
@@ -26,6 +27,9 @@ export class ScheduleItemModel {
     readonly task!: TaskModel;
     constructor(params: PickProperties<ScheduleItemModel>) {
         Object.assign(this, params);
+
+        if ( this.time.isOneHourBeforeEndOfWorkDay() )
+            throw new TooLateForNewTaskDomainError(this.time.startDate);
     }
 
     isIntersectTimeWith(item: ScheduleItemModel): boolean {

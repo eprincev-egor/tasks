@@ -1,4 +1,10 @@
 export class HoursValueObject {
+
+    static create(quantity: HoursValueObject | number) {
+        if ( quantity instanceof HoursValueObject ) return quantity;
+        return new HoursValueObject(quantity);
+    }
+
     constructor(
         readonly quantity: number
     ) {

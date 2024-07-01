@@ -5,7 +5,7 @@ export class DateIntervalValueObject {
 
     static create(
         startDate: DateValueObject,
-        duration: HoursValueObject
+        duration: HoursValueObject | number
     ) {
         return new DateIntervalValueObject(
             startDate,
@@ -20,6 +20,10 @@ export class DateIntervalValueObject {
 
     toString() {
         return `${this.startDate} - ${this.endDate}`;
+    }
+
+    isOneHourBeforeEndOfWorkDay() {
+        return this.startDate.isOneHourBeforeEndOfWorkDay();
     }
 
     isIntersectWith(other: DateIntervalValueObject): boolean {
