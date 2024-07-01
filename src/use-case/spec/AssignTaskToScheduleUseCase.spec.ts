@@ -3,9 +3,10 @@ import { CommonFixture, FakeContext, createFake, createFixture, now } from "./co
 import { UnknownEmployeeIdDomainError } from "../../model/error";
 import { UnknownTaskIdDomainError } from "../../model/error/UnknownTaskIdDomainError";
 import { MissedScheduleDomainError } from "../../model/error/MissedScheduleDomainError";
-import { strict } from "assert";
 import { DateIntervalValueObject } from "../../model/DateIntervalValueObject";
 import { HoursValueObject } from "../../model";
+import { BusyEmployeeDomainError } from "../../model/error/BusyEmployeeDomainError";
+import { strict } from "assert";
 
 describe.only("AssignTaskToScheduleUseCase", () => {
 
@@ -41,7 +42,7 @@ describe.only("AssignTaskToScheduleUseCase", () => {
     it("should reject task if not exist schedule", async () => {
         await strict.rejects(
             assignTaskToSchedule({
-                time: new DateIntervalValueObject(
+                time: DateIntervalValueObject.create(
                     now.plusMonth(),
                     new HoursValueObject(1)
                 )
@@ -82,8 +83,55 @@ describe.only("AssignTaskToScheduleUseCase", () => {
         await assignTaskToSchedule();
 
         await strict.rejects(
-            assignTaskToSchedule()
+            assignTaskToSchedule(),
+            BusyEmployeeDomainError
         );
+    });
+
+    it("should assign task if next task starts immediately after previous", async () => {
+        // Arrange
+        await assignTaskToSchedule({ time: fixture.wholeDay });
+        const immediatelyNextTaskTime = DateIntervalValueObject.create(
+            fixture.wholeDay.endDate,
+            new HoursValueObject(4)
+        );
+
+        // Act
+        await assignTaskToSchedule({ time: immediatelyNextTaskTime });
+
+        // Assert
+        fake.schedules.wasSaved({
+            id: fixture.schedule.id,
+            items: [
+                {time: fixture.wholeDay},
+                {time: immediatelyNextTaskTime}
+            ]
+        });
+    });
+
+    it("should assign tasks on same time for different employees", async () => {
+        // Arrange
+        fake.employers.set(fixture.employee2);
+        const sameTime = fixture.wholeDay;
+        await assignTaskToSchedule({
+            time: sameTime,
+            employeeId: fixture.employee.id
+        });
+
+        // Act
+        await assignTaskToSchedule({
+            time: sameTime,
+            employeeId: fixture.employee2.id
+        });
+
+        // Assert
+        fake.schedules.wasSaved({
+            id: fixture.schedule.id,
+            items: [
+                {employee: fixture.employee, time: sameTime},
+                {employee: fixture.employee2, time: sameTime}
+            ]
+        });
     });
 
     async function assignTaskToSchedule(dto: Partial<AssignTaskToScheduleDto> = {}) {

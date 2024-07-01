@@ -76,6 +76,14 @@ export class DateValueObject {
         return +this.date === +someDate.date;
     }
 
+    lessThan(other: DateValueObject) {
+        return this.date < other.date;
+    }
+
+    greaterThan(other: DateValueObject) {
+        return this.date > other.date;
+    }
+
     toString() {
         return this.date.toISOString();
     }

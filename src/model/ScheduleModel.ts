@@ -1,5 +1,6 @@
 import { DateValueObject } from "./DateValueObject";
 import { ScheduleItemModel, ScheduleItemParams } from "./ScheduleItemModel";
+import { BusyEmployeeDomainError } from "./error";
 import { PickProperties, uuid } from "./utils";
 
 export class ScheduleModel {
@@ -22,7 +23,15 @@ export class ScheduleModel {
     }
 
     assignTask(itemParams: ScheduleItemParams) {
-        const item = ScheduleItemModel.create(itemParams);
-        this.items.push(item);
+        const newItem = ScheduleItemModel.create(itemParams);
+
+        const timeIsBusy = this.items.some((item) =>
+            item.isIntersectTimeWith(newItem) &&
+            !item.employee.equals(newItem.employee)
+        );
+        if ( timeIsBusy )
+            throw new BusyEmployeeDomainError(newItem.employee, newItem.time);
+
+        this.items.push(newItem);
     }
 }

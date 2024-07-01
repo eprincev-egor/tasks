@@ -27,4 +27,8 @@ export class ScheduleItemModel {
     constructor(params: PickProperties<ScheduleItemModel>) {
         Object.assign(this, params);
     }
+
+    isIntersectTimeWith(item: ScheduleItemModel): boolean {
+        return this.time.isIntersectWith(item.time);
+    }
 }

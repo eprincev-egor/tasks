@@ -13,6 +13,7 @@ export interface FakeContext {
 export interface CommonFixture {
     task: TaskModel;
     employee: EmployeeModel;
+    employee2: EmployeeModel;
     schedule: ScheduleModel;
     /** 8 hours */
     wholeDay: DateIntervalValueObject;
@@ -32,7 +33,8 @@ export function createFixture(): CommonFixture {
     return {
         task: TaskModel.create(),
         employee: EmployeeModel.create("Oliver Twist"),
-        wholeDay: new DateIntervalValueObject(
+        employee2: EmployeeModel.create("Mark Twain"),
+        wholeDay: DateIntervalValueObject.create(
             now.toWorkDayStart(),
             new HoursValueObject(8)
         ),

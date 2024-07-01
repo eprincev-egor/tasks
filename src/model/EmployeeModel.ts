@@ -14,4 +14,8 @@ export class EmployeeModel {
     constructor(params: PickProperties<EmployeeModel>) {
         Object.assign(this, params);
     }
+
+    equals(other: EmployeeModel) {
+        return this.id === other.id;
+    }
 }
