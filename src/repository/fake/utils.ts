@@ -28,7 +28,11 @@ export function shallowDeepEqual(expect: any, actual: any, path = ""): void {
         return;
     }
 
-    shallowDeepEqualObjectOrArray(
+    if ( Array.isArray(expect) ) {
+        shallowDeepEqualArray(expect, actual as any[], path);
+    }
+
+    shallowDeepEqualObject(
         expect as Record<any, any>,
         actual as Record<any, any>,
         path
@@ -54,7 +58,26 @@ function shallowDeepEqualPrimitiveOrDate(expect: any, actual: any, path: string)
         throw new Error(`Expected to have: ${stringify(expect)}\nbut got: ${stringify(actual)}\nat path "${path}".`);
 }
 
-function shallowDeepEqualObjectOrArray(
+function shallowDeepEqualArray(
+    expect: any[],
+    actual: any[],
+    path: string
+) {
+    if ( actual === null )
+        throw new Error(`Expected to have an array/object, but got null at path "${path}".`);
+
+    if ( actual.length < expect.length )
+        throw new Error(`Expected to have ${expect.length} elements, but got array with ${actual.length} items at path "${path}".`);
+
+    if ( expect.length === 0 && actual.length > 0 )
+        throw new Error(`Expected to have empty array, but got array with ${actual.length} items at path "${path}".`);
+
+    for (const [i, expectedElement] of expect.entries()) {
+        shallowDeepEqual(expectedElement, actual[i], `${path}[${i}]`);
+    }
+}
+
+function shallowDeepEqualObject(
     expect: Record<any, any>,
     actual: Record<any, any>,
     path: string

@@ -1,7 +1,7 @@
 import { DateIntervalValueObject } from "./DateIntervalValueObject";
 import { DateValueObject, WORK_DAY_DURATION } from "./DateValueObject";
 import { ScheduleItemModel, ScheduleItemParams } from "./ScheduleItemModel";
-import { BusyEmployeeDomainError } from "./error";
+import { BusyEmployeeDomainError, UnknownScheduleItemIdDomainError } from "./error";
 import { PickProperties, uuid } from "./utils";
 
 export class ScheduleModel {
@@ -18,7 +18,7 @@ export class ScheduleModel {
     readonly id!: string;
     readonly startDate!: DateValueObject;
     readonly finishDate!: DateValueObject;
-    readonly items!: ScheduleItemModel[];
+    items!: ScheduleItemModel[];
     constructor(params: PickProperties<ScheduleModel>) {
         Object.assign(this, params);
     }
@@ -49,6 +49,13 @@ export class ScheduleModel {
             remainder -= WORK_DAY_DURATION;
             dayStart = dayStart.plusDay();
         }
+    }
+
+    deleteItem(itemId: ScheduleItemModel["id"]) {
+        const item = this.items.find((item) => item.id == itemId);
+        if ( !item ) throw new UnknownScheduleItemIdDomainError(itemId);
+
+        this.items = this.items.filter((item) => item.id !== itemId);
     }
 
     private addItem(newItemParams: ScheduleItemParams) {
