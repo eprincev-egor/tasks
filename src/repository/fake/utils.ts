@@ -17,11 +17,6 @@ export type DeepPartial<T> = (
     } : Partial<T>
 );
 
-
-export function sleep(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 export function shallowDeepEqual(expect: any, actual: any, path = ""): void {
     if ( isPrimitiveOrDate(expect) ) {
         shallowDeepEqualPrimitiveOrDate(expect, actual, path);

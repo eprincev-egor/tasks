@@ -7,8 +7,7 @@ export class HoursValueObject {
         return new HoursValueObject( ms / HOUR );
     }
 
-    static create(quantity: HoursValueObject | number) {
-        if ( quantity instanceof HoursValueObject ) return quantity;
+    static create(quantity: number) {
         return new HoursValueObject(quantity);
     }
 
@@ -20,9 +19,5 @@ export class HoursValueObject {
 
         if ( quantity !== Math.floor(quantity * 2) / 2 )
             throw new Error(`Hours must be a multiple of 0.5, got invalid hours: ${quantity}`);
-    }
-
-    divide(value: number) {
-        return this.quantity / value;
     }
 }

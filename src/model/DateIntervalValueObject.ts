@@ -1,11 +1,10 @@
 import { DateValueObject } from "./DateValueObject";
-import { HoursValueObject } from "./HoursValueObject";
 
 export class DateIntervalValueObject {
 
     static create(
         startDate: DateValueObject,
-        duration: HoursValueObject | number
+        duration: number
     ) {
         return new DateIntervalValueObject(
             startDate,

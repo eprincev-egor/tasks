@@ -79,17 +79,10 @@ export class DateValueObject {
         return new DateValueObject(nextDay);
     }
 
-    plusHours(rawHours: HoursValueObject | number) {
+    plusHours(rawHours: number) {
         const hours = HoursValueObject.create(rawHours);
         const nextDate = new Date(+this.date);
         nextDate.setHours(this.date.getHours() + hours.quantity);
-        return new DateValueObject(nextDate);
-    }
-
-    minusHours(rawHours: HoursValueObject | number) {
-        const hours = HoursValueObject.create(rawHours);
-        const nextDate = new Date(+this.date);
-        nextDate.setHours(this.date.getHours() - hours.quantity);
         return new DateValueObject(nextDate);
     }
 
