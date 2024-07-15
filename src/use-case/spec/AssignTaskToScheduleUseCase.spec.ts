@@ -1,14 +1,13 @@
 import { AssignTaskToScheduleDto, AssignTaskToScheduleUseCase } from "../AssignTaskToScheduleUseCase";
 import { CommonFixture, FakeContext, createFake, createFixture, now } from "./common.fixture";
-import { TooLateForNewTaskDomainError, UnknownEmployeeIdDomainError } from "../../model/error";
+import { TooLateForNewTaskDomainError, UnknownEmployeeIdDomainError, BusyEmployeeDomainError } from "../../model/error";
 import { UnknownTaskIdDomainError } from "../../model/error/UnknownTaskIdDomainError";
 import { MissedScheduleDomainError } from "../../model/error/MissedScheduleDomainError";
 import { DateIntervalValueObject } from "../../model/DateIntervalValueObject";
 import { DateValueObject, WORK_DAY_DURATION } from "../../model";
-import { BusyEmployeeDomainError } from "../../model/error/BusyEmployeeDomainError";
 import { strict } from "assert";
 
-describe.only("AssignTaskToScheduleUseCase", () => {
+describe("AssignTaskToScheduleUseCase", () => {
 
     let fake: FakeContext;
     let fixture: CommonFixture;
@@ -142,6 +141,52 @@ describe.only("AssignTaskToScheduleUseCase", () => {
                 time: DateIntervalValueObject.create(oneHourBeforeEndOfDay, 1)
             }),
             TooLateForNewTaskDomainError
+        );
+    });
+
+    it("should split task if it is too long for one day", async () => {
+        // Arrange
+        const longTime = WORK_DAY_DURATION * 2;
+        const firstPart = DateIntervalValueObject.create(
+            fixture.workDayStart, longTime / 2
+        );
+        const secondPart = DateIntervalValueObject.create(
+            fixture.workDayStart.plusDay(), longTime / 2
+        );
+
+        // Act
+        await assignTaskToSchedule({
+            time: DateIntervalValueObject.create(fixture.workDayStart, longTime)
+        });
+
+        // Assert
+        fake.schedules.wasSaved({
+            id: fixture.schedule.id,
+            items: [
+                {employee: fixture.employee, time: firstPart},
+                {employee: fixture.employee, time: secondPart}
+            ]
+        });
+    });
+
+    it("should reject long duration if it intersected with task", async () => {
+        // Arrange
+        await assignTaskToSchedule({
+            time: DateIntervalValueObject.create(
+                fixture.workDayStart.plusDay(),
+                4
+            )
+        });
+        const longTime = WORK_DAY_DURATION * 3;
+        const longInterval = DateIntervalValueObject.create(
+            fixture.workDayStart,
+            longTime
+        );
+
+        // Act, assert
+        await strict.rejects(
+            assignTaskToSchedule({ time: longInterval }),
+            BusyEmployeeDomainError
         );
     });
 

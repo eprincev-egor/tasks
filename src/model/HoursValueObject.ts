@@ -1,4 +1,11 @@
+const MINUTE = 60 * 1000;
+const HOUR = 60 * MINUTE;
+
 export class HoursValueObject {
+
+    static fromMs(ms: number) {
+        return new HoursValueObject( ms / HOUR );
+    }
 
     static create(quantity: HoursValueObject | number) {
         if ( quantity instanceof HoursValueObject ) return quantity;
@@ -13,5 +20,9 @@ export class HoursValueObject {
 
         if ( quantity !== Math.floor(quantity * 2) / 2 )
             throw new Error(`Hours must be a multiple of 0.5, got invalid hours: ${quantity}`);
+    }
+
+    divide(value: number) {
+        return this.quantity / value;
     }
 }

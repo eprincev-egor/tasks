@@ -18,6 +18,10 @@ export class DateIntervalValueObject {
         readonly endDate: DateValueObject
     ) {}
 
+    get duration() {
+        return this.endDate.minus(this.startDate);
+    }
+
     toString() {
         return `${this.startDate} - ${this.endDate}`;
     }

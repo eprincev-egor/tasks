@@ -7,7 +7,11 @@ export class BusyEmployeeDomainError
 
     code = "EMPLOYEE_IS_BUSY";
 
-    constructor(employee: EmployeeModel, time: DateIntervalValueObject) {
-        super(`Employee ${employee.name} is busy on ${time.toString()}`);
+    constructor({employee, requestedTime, busyTime}: {
+        employee: EmployeeModel;
+        requestedTime: DateIntervalValueObject;
+        busyTime: DateIntervalValueObject;
+    }) {
+        super(`Employee ${employee.name} is busy on ${busyTime.toString()}, requested ${requestedTime.toString()}`);
     }
 }

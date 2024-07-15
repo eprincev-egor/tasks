@@ -1,10 +1,10 @@
 import {PickProperties, uuid} from "./utils";
 
 export class TaskModel {
-    static create(){
+    static create() {
         return new TaskModel({
-            id: uuid(),
-        })
+            id: uuid()
+        });
     }
 
     readonly id!: string;

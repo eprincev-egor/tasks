@@ -15,6 +15,7 @@ export interface CommonFixture {
     employee: EmployeeModel;
     employee2: EmployeeModel;
     schedule: ScheduleModel;
+    workDayStart: DateValueObject;
     /** 8 hours */
     wholeDay: DateIntervalValueObject;
 }
@@ -34,6 +35,7 @@ export function createFixture(): CommonFixture {
         task: TaskModel.create(),
         employee: EmployeeModel.create("Oliver Twist"),
         employee2: EmployeeModel.create("Mark Twain"),
+        workDayStart: now.toWorkDayStart(),
         wholeDay: DateIntervalValueObject.create(
             now.toWorkDayStart(), WORK_DAY_DURATION
         ),

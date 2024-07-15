@@ -1,6 +1,7 @@
 import { HoursValueObject } from "./HoursValueObject";
 
-export const WORK_DAY_DURATION = 9;
+// TODO: move to config
+export const WORK_DAY_DURATION = 8;
 
 export class DateValueObject {
 
@@ -72,6 +73,12 @@ export class DateValueObject {
         return new DateValueObject(nextMonth);
     }
 
+    plusDay() {
+        const nextDay = new Date(+this.date);
+        nextDay.setDate(this.date.getDate() + 1);
+        return new DateValueObject(nextDay);
+    }
+
     plusHours(rawHours: HoursValueObject | number) {
         const hours = HoursValueObject.create(rawHours);
         const nextDate = new Date(+this.date);
@@ -84,6 +91,11 @@ export class DateValueObject {
         const nextDate = new Date(+this.date);
         nextDate.setHours(this.date.getHours() - hours.quantity);
         return new DateValueObject(nextDate);
+    }
+
+    minus(someDate: DateValueObject): HoursValueObject {
+        const deltaInMs = +this.date - +someDate.date;
+        return HoursValueObject.fromMs(deltaInMs);
     }
 
     equals(someDate: DateValueObject): boolean {
@@ -99,8 +111,11 @@ export class DateValueObject {
     }
 
     isOneHourBeforeEndOfWorkDay() {
-        const oneHourBeforeEndOfDay = this.toWorkDayEnd().minusHours(1);
-        return this.date >= oneHourBeforeEndOfDay.date;
+        return this.getHoursToEndOfWorkDay().quantity === 1;
+    }
+
+    getHoursToEndOfWorkDay() {
+        return this.toWorkDayEnd().minus(this);
     }
 
     toString() {
