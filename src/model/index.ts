@@ -1,5 +1,6 @@
 export * from "./error";
 export * from "./DateValueObject";
+export * from "./DateIntervalValueObject";
 export * from "./EmployeeModel";
 export * from "./HoursValueObject";
 export * from "./ScheduleItemModel";

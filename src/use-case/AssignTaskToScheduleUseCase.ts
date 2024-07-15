@@ -1,11 +1,6 @@
-import { EmployeeModel } from "../model/EmployeeModel";
-import { TaskModel } from "../model/TaskModel";
-import { ScheduleRepository } from "../repository/interface";
-import {FakeTaskRepository} from "../repository/fake/FakeTaskRepository";
-import {FakeEmployeeRepository} from "../repository/fake/FakeEmployeeRepository";
-import {UnknownEmployeeIdDomainError, UnknownTaskIdDomainError} from "../model/error";
-import { MissedScheduleDomainError } from "../model/error/MissedScheduleDomainError";
-import { DateIntervalValueObject } from "../model/DateIntervalValueObject";
+import { EmployeeModel, TaskModel, DateIntervalValueObject } from "../model";
+import { UnknownEmployeeIdDomainError, UnknownTaskIdDomainError, MissedScheduleDomainError } from "../model/error";
+import { EmployeeRepository, ScheduleRepository, TaskRepository } from "../repository/interface";
 
 export interface AssignTaskToScheduleDto {
     employeeId: EmployeeModel["id"];
@@ -17,8 +12,8 @@ export class AssignTaskToScheduleUseCase {
 
     constructor(
         private schedules: ScheduleRepository,
-        private tasks: FakeTaskRepository,
-        private employers: FakeEmployeeRepository
+        private tasks: TaskRepository,
+        private employers: EmployeeRepository
     ) {}
 
     async execute(dto: AssignTaskToScheduleDto) {
