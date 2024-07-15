@@ -11,6 +11,7 @@ export interface ScheduleRepository {
 
 export interface EmployeeRepository {
     findOne(id: string): Promise<EmployeeModel | undefined>;
+    save(employee: EmployeeModel): Promise<void>;
 }
 
 export interface TaskRepository {
