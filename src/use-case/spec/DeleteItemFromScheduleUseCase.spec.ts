@@ -35,7 +35,7 @@ describe("DeleteItemFromScheduleUseCase", () => {
     it("should delete item", async () => {
         // Arrange
         fixture.schedule.assignTask({
-            employee: fixture.employee,
+            employee: fixture.programmer,
             task: fixture.task,
             time: fixture.wholeDay
         });

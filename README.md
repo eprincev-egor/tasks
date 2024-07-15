@@ -69,9 +69,9 @@ CalendarModel
 TaskModel
     project: ProjectModel;
     priority: PriorityLevelValueObject; Low/Normal/High
-    key: TaskNumberValueObject;
+    key: TaskNumberValueObject
     author: ManagerModel;
-    title: string;
+    title: string;  name theme 
     creationDate: DateTimeValueObject;
     level?: TaskLevelType;
     <deadline?: DateTimeValueObject;>!

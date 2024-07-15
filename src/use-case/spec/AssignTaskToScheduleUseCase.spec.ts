@@ -15,7 +15,7 @@ describe("AssignTaskToScheduleUseCase", () => {
         fake = createFake();
         fixture = createFixture();
 
-        fake.employers.set(fixture.employee);
+        fake.employers.set(fixture.programmer);
         fake.tasks.set(fixture.task);
         fake.schedules.set(fixture.schedule);
     });
@@ -61,7 +61,7 @@ describe("AssignTaskToScheduleUseCase", () => {
 
         fake.schedules.wasSaved({
             id: fixture.schedule.id,
-            items: [{employee: fixture.employee}]
+            items: [{employee: fixture.programmer}]
         });
     });
 
@@ -109,25 +109,25 @@ describe("AssignTaskToScheduleUseCase", () => {
 
     it("should assign tasks on same time for different employees", async () => {
         // Arrange
-        fake.employers.set(fixture.employee2);
+        fake.employers.set(fixture.programmer2);
         const sameTime = fixture.wholeDay;
         await assignTaskToSchedule({
             time: sameTime,
-            employeeId: fixture.employee.id
+            employeeId: fixture.programmer.id
         });
 
         // Act
         await assignTaskToSchedule({
             time: sameTime,
-            employeeId: fixture.employee2.id
+            employeeId: fixture.programmer2.id
         });
 
         // Assert
         fake.schedules.wasSaved({
             id: fixture.schedule.id,
             items: [
-                {employee: fixture.employee, time: sameTime},
-                {employee: fixture.employee2, time: sameTime}
+                {employee: fixture.programmer, time: sameTime},
+                {employee: fixture.programmer2, time: sameTime}
             ]
         });
     });
@@ -163,8 +163,8 @@ describe("AssignTaskToScheduleUseCase", () => {
         fake.schedules.wasSaved({
             id: fixture.schedule.id,
             items: [
-                {employee: fixture.employee, time: firstPart},
-                {employee: fixture.employee, time: secondPart}
+                {employee: fixture.programmer, time: firstPart},
+                {employee: fixture.programmer, time: secondPart}
             ]
         });
     });
@@ -197,7 +197,7 @@ describe("AssignTaskToScheduleUseCase", () => {
             fake.employers
         );
         await assignTaskToSchedule.execute({
-            employeeId: fixture.employee.id,
+            employeeId: fixture.programmer.id,
             taskId: fixture.task.id,
             time: fixture.wholeDay,
             ...dto

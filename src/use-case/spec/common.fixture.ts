@@ -12,8 +12,9 @@ export interface FakeContext {
 
 export interface CommonFixture {
     task: TaskModel;
-    employee: EmployeeModel;
-    employee2: EmployeeModel;
+    programmer: EmployeeModel;
+    programmer2: EmployeeModel;
+    manager: EmployeeModel;
     schedule: ScheduleModel;
     workDayStart: DateValueObject;
     /** 8 hours */
@@ -31,10 +32,17 @@ export function createFake(): FakeContext {
 }
 
 export function createFixture(): CommonFixture {
+    const manager = EmployeeModel.create("Bob Manager");
     return {
-        task: TaskModel.create(),
-        employee: EmployeeModel.create("Oliver Twist"),
-        employee2: EmployeeModel.create("Mark Twain"),
+        task: TaskModel.create({
+            title: "Some Task",
+            key: "LW-1001",
+            author: manager,
+            description: "Add feature"
+        }),
+        programmer: EmployeeModel.create("Oliver Twist"),
+        programmer2: EmployeeModel.create("Mark Twain"),
+        manager,
         workDayStart: now.toWorkDayStart(),
         wholeDay: DateIntervalValueObject.create(
             now.toWorkDayStart(), WORK_DAY_DURATION

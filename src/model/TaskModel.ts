@@ -1,14 +1,27 @@
-import {PickProperties, uuid} from "./utils";
+import { DateValueObject } from "./DateValueObject";
+import { EmployeeModel } from "./EmployeeModel";
+import { PickProperties, uuid } from "./utils";
+
+export type TaskParams = PickProperties<TaskModel>;
+export type NewTaskParams = Omit<TaskParams, "id" | "creationDate">;
 
 export class TaskModel {
-    static create() {
+
+    static create(params: NewTaskParams) {
         return new TaskModel({
-            id: uuid()
+            id: uuid(),
+            creationDate: DateValueObject.now(),
+            ...params
         });
     }
 
     readonly id!: string;
-    constructor(params: PickProperties<TaskModel>) {
+    readonly key!: string;
+    readonly title!: string;
+    readonly description!: string;
+    readonly author!: EmployeeModel;
+    readonly creationDate!: DateValueObject;
+    constructor(params: TaskParams) {
         Object.assign(this, params);
     }
 }

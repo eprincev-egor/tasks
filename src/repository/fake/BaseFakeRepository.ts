@@ -42,6 +42,11 @@ export class BaseFakeRepository<TModel extends { id: string }> {
     }
 
     /** ASSERT UTILS FOR TESTS ONLY: get last version of saved model by any condition */
+    getLast() {
+        return clone(this.models.at(-1));
+    }
+
+    /** ASSERT UTILS FOR TESTS ONLY: get last version of saved model by any condition */
     getBy(by: (model: TModel) => boolean | undefined) {
         return clone(this.models.find(by));
     }

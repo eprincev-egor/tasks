@@ -16,4 +16,5 @@ export interface EmployeeRepository {
 
 export interface TaskRepository {
     findOne(id: string): Promise<TaskModel | undefined>;
+    save(task: TaskModel): Promise<void>;
 }
