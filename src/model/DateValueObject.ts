@@ -3,11 +3,21 @@ import { HoursValueObject } from "./HoursValueObject";
 // TODO: move to config
 export const WORK_DAY_DURATION = 8;
 
+export const dateTransformer = {
+    to: (value?: DateValueObject) => value?.toString(),
+    from: (value?: Date) => value ? new DateValueObject(value) : undefined
+};
+
 export class DateValueObject {
 
     static now() {
         const now = new Date();
         return new DateValueObject(now);
+    }
+
+    static fromIso(iso: string) {
+        const date = new Date(iso);
+        return new DateValueObject(date);
     }
 
     constructor(

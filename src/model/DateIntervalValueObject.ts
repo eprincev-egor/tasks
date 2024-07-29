@@ -1,5 +1,20 @@
 import { DateValueObject } from "./DateValueObject";
 
+export const dateIntervalTransformer = {
+    to: (value?: DateIntervalValueObject) => value ? {
+        startDate: value.startDate.toString(),
+        duration: value.duration.quantity,
+        endDate: value.endDate.toString()
+    } : undefined,
+    from: (value?: {
+        startDate: string;
+        duration: number;
+    }) => value ? DateIntervalValueObject.create(
+        DateValueObject.fromIso( value.startDate ),
+        value.duration
+    ) : undefined
+};
+
 export class DateIntervalValueObject {
 
     static create(

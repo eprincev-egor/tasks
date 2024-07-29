@@ -1,8 +1,10 @@
+import { Column, Entity, PrimaryColumn } from "typeorm";
 import { LowercaseEmployeeNameDomainError, NonLatinEmployeeNameDomainError } from "./error";
 import {PickProperties, uuid} from "./utils";
 
 export type EmployeeParams = PickProperties<EmployeeModel>;
 
+@Entity("employees")
 export class EmployeeModel {
 
     static create(name: string) {
@@ -12,8 +14,12 @@ export class EmployeeModel {
         });
     }
 
+    @PrimaryColumn()
     readonly id!: string;
+
+    @Column({ nullable: false })
     readonly name!: string;
+
     constructor(params: EmployeeParams) {
         Object.assign(this, params);
 

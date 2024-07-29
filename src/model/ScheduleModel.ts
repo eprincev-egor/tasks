@@ -1,9 +1,11 @@
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { DateIntervalValueObject } from "./DateIntervalValueObject";
-import { DateValueObject, WORK_DAY_DURATION } from "./DateValueObject";
+import { dateTransformer, DateValueObject, WORK_DAY_DURATION } from "./DateValueObject";
 import { ScheduleItemModel, ScheduleItemParams } from "./ScheduleItemModel";
 import { BusyEmployeeDomainError, UnknownScheduleItemIdDomainError } from "./error";
 import { PickProperties, uuid } from "./utils";
 
+@Entity("schedules")
 export class ScheduleModel {
 
     static createForMonth(startMonthDate: DateValueObject) {
@@ -15,10 +17,28 @@ export class ScheduleModel {
         });
     }
 
+    @PrimaryColumn()
     readonly id!: string;
+
+    @Column("timestamptz", {
+        nullable: false,
+        transformer: dateTransformer
+    })
     readonly startDate!: DateValueObject;
+
+    @Column("timestamptz", {
+        nullable: false,
+        transformer: dateTransformer
+    })
     readonly finishDate!: DateValueObject;
-    items!: ScheduleItemModel[];
+
+    @OneToMany(() => ScheduleItemModel, (item) => item.fkSchedule, {
+        eager: true,
+        nullable: false,
+        cascade: ["insert", "update", "recover", "soft-remove", "remove"]
+    })
+    public items!: ScheduleItemModel[];
+
     constructor(params: PickProperties<ScheduleModel>) {
         Object.assign(this, params);
     }
