@@ -1,27 +1,30 @@
-import { DataSource } from "typeorm";
-import { EmployeeModel, ScheduleItemModel, ScheduleModel, TaskModel } from "./model";
+import { EmployeeModel } from "./model";
+import { NestFactory } from "@nestjs/core";
+import { EmployeeModule } from "./controller";
+import { CreateEmployeeUseCase } from "./use-case";
+import { TypeormEmployeeRepository } from "./repository/typeorm";
+import { GlobalExceptionFilter } from "./controller/middleware";
+import { ValidationPipe } from "@nestjs/common";
+import { migrate } from "./migrate";
 
-async function main() {
-    const db = new DataSource({
-        type: "postgres",
-        host: process.env.POSTGRES_HOST || "localhost",
-        port: Number(process.env.POSTGRES_PORT) || 5432,
-        username: process.env.POSTGRES_USER,
-        password: process.env.POSTGRES_PASSWORD,
-        database: process.env.POSTGRES_DATABASE,
-        entities: [
-            EmployeeModel,
-            TaskModel,
-            ScheduleItemModel,
-            ScheduleModel
-        ],
-        entitySkipConstructor: true
-    });
-    await db.initialize();
-    await db.synchronize();
+export async function main() {
+    const db = await migrate();
+
+    const employees = new TypeormEmployeeRepository(
+        db.getRepository(EmployeeModel)
+    );
+
+    EmployeeModule.createEmployee = new CreateEmployeeUseCase(employees);
+
+    const server = await NestFactory.create(EmployeeModule);
+    server.useGlobalFilters(new GlobalExceptionFilter());
+    server.useGlobalPipes(new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        stopAtFirstError: true
+    }));
+
+    const appPort = Number(process.env.APP_PORT) || 8080;
+    await server.listen(appPort);
 }
-
-main().catch((error) => {
-    console.error(error);
-    process.exit(1);
-});

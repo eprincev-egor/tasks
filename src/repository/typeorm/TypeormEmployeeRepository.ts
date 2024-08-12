@@ -9,4 +9,8 @@ export class TypeormEmployeeRepository
     async findOne(id: string): Promise<EmployeeModel | undefined> {
         return await this.findOneWhere({ id });
     }
+
+    async findOneByName(name: string): Promise<EmployeeModel | undefined> {
+        return await this.findOneWhere({ name });
+    }
 }

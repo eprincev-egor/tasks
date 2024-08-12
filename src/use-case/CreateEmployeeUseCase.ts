@@ -1,7 +1,6 @@
-import { EmployeeModel, EmployeeParams } from "../model";
+import { EmployeeModel } from "../model";
 import { EmployeeRepository } from "../repository/interface";
-
-export type CreateEmployeeDto = Omit<EmployeeParams, "id">;
+import { CreateEmployeeDto } from "./dto";
 
 export class CreateEmployeeUseCase {
     constructor(
