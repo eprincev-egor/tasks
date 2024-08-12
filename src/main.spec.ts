@@ -2,10 +2,10 @@ import { configDotenv } from "dotenv";
 import {Client} from "pg";
 import { migrate } from "./migrate";
 import { main } from "./main";
-import { TypeormEmployeeRepository } from "./repository/typeorm";
+import { TypeormEmployeeRepository, TypeormTaskRepository } from "./repository/typeorm";
 import { strict } from "assert";
 import { DataSource } from "typeorm";
-import { EmployeeModel } from "./model";
+import { EmployeeModel, TaskModel } from "./model";
 
 describe("integration tests", () => {
 
@@ -13,6 +13,7 @@ describe("integration tests", () => {
     let orm: DataSource;
     let appPort: number;
     let employees: TypeormEmployeeRepository;
+    let tasks: TypeormTaskRepository;
     before(async () => {
         configDotenv({ path: ".env-test.ini" });
         appPort = Number(process.env.APP_PORT);
@@ -32,7 +33,9 @@ describe("integration tests", () => {
         await pg.query("drop schema public cascade");
         await pg.query("create schema public");
         orm = await migrate();
+
         employees = new TypeormEmployeeRepository(orm.getRepository(EmployeeModel));
+        tasks = new TypeormTaskRepository(orm.getRepository(TaskModel));
     });
 
     it("should create employee", async () => {
@@ -45,6 +48,25 @@ describe("integration tests", () => {
         // Assert
         const createdEmployee = await employees.findOneByName(employeeName);
         strict.ok(createdEmployee);
+    });
+
+    it("should create task", async () => {
+        // Arrange
+        const manager = EmployeeModel.create("Bob Manager");
+        const taskKey = "LW-1001";
+        await employees.save(manager);
+
+        // Act
+        await PUT("/tasks", {
+            key: taskKey,
+            title: "Some Task",
+            description: "Add feature",
+            authorId: manager.id
+        });
+
+        // Assert
+        const createdTask = await tasks.findOneByKey(taskKey);
+        strict.ok(createdTask);
     });
 
     async function PUT(url: string, body: any) {

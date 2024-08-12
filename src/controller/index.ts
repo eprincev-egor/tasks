@@ -1,2 +1,2 @@
 export * from "./EmployeeController";
-export * from "./EmployeeModule";
+export * from "./TaskModule";

@@ -27,7 +27,7 @@ export class TaskModel {
     readonly title!: string;
 
     @Column({ nullable: true })
-    readonly description!: string;
+    readonly description?: string;
 
     @ManyToOne(() => EmployeeModel, {
         eager: true

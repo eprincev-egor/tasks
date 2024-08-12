@@ -9,4 +9,8 @@ export class TypeormTaskRepository
     async findOne(id: string): Promise<TaskModel | undefined> {
         return await this.findOneWhere({ id });
     }
+
+    async findOneByKey(key: string): Promise<TaskModel | undefined> {
+        return await this.findOneWhere({ key });
+    }
 }

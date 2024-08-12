@@ -7,7 +7,7 @@ import { DateIntervalValueObject } from "../../model/DateIntervalValueObject";
 export interface FakeContext {
     schedules: FakeScheduleRepository;
     tasks: FakeTaskRepository;
-    employers: FakeEmployeeRepository;
+    employees: FakeEmployeeRepository;
 }
 
 export interface CommonFixture {
@@ -27,7 +27,7 @@ export function createFake(): FakeContext {
     return {
         schedules: new FakeScheduleRepository(),
         tasks: new FakeTaskRepository(),
-        employers: new FakeEmployeeRepository()
+        employees: new FakeEmployeeRepository()
     };
 }
 

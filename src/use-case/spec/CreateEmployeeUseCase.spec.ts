@@ -13,7 +13,7 @@ describe("CreateEmployeeUseCase", () => {
     it("should create employee", async () => {
         await createEmployee("Oliver Twist");
 
-        fake.employers.wasSaved({
+        fake.employees.wasSaved({
             name: "Oliver Twist"
         });
     });
@@ -35,13 +35,13 @@ describe("CreateEmployeeUseCase", () => {
     it("should accept employee name with -", async () => {
         await createEmployee("Ivan Mamin-Sibiryak");
 
-        fake.employers.wasSaved({
+        fake.employees.wasSaved({
             name: "Ivan Mamin-Sibiryak"
         });
     });
 
     async function createEmployee(name: string) {
-        const createEmployee = new CreateEmployeeUseCase(fake.employers);
+        const createEmployee = new CreateEmployeeUseCase(fake.employees);
         await createEmployee.execute({ name });
     }
 });

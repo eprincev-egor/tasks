@@ -9,4 +9,8 @@ export class FakeTaskRepository
     async findOne(id: string): Promise<TaskModel | undefined> {
         return this.getBy((model) => model.id === id);
     }
+
+    async findOneByKey(key: string): Promise<TaskModel | undefined> {
+        return this.getBy((model) => model.key === key);
+    }
 }

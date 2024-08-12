@@ -1,5 +1,6 @@
-import { DateValueObject } from "../../model";
-import { CreateTaskDto, CreateTaskUseCase } from "../CreateTaskUseCase";
+import { DateValueObject, UnknownEmployeeIdDomainError } from "../../model";
+import { CreateTaskUseCase } from "../CreateTaskUseCase";
+import { CreateTaskDto } from "../dto";
 import { CommonFixture, createFake, createFixture, FakeContext } from "./common.fixture";
 import { strict } from "assert";
 
@@ -10,6 +11,8 @@ describe("CreateTaskUseCase", () => {
     beforeEach(() => {
         fake = createFake();
         fixture = createFixture();
+
+        fake.employees.set(fixture.manager);
     });
 
     it("should create task with correct title", async () => {
@@ -21,11 +24,18 @@ describe("CreateTaskUseCase", () => {
     });
 
     it("should create task with correct author", async () => {
-        await createTask({ author: fixture.manager });
+        await createTask({ authorId: fixture.manager.id });
 
         fake.tasks.wasSaved({
             author: fixture.manager
         });
+    });
+
+    it("should reject unknown author", async () => {
+        await strict.rejects(
+            createTask({ authorId: "unknown" }),
+            UnknownEmployeeIdDomainError
+        );
     });
 
     it("should create task with current date in creationDate", async () => {
@@ -56,14 +66,18 @@ describe("CreateTaskUseCase", () => {
         });
     });
 
-    async function createTask(dto: Partial<CreateTaskDto> = {}) {
-        const createTask = new CreateTaskUseCase(fake.tasks);
-        await createTask.execute({
+    async function createTask(dtoParams: Partial<CreateTaskDto> = {}) {
+        const createTask = new CreateTaskUseCase(
+            fake.employees,
+            fake.tasks
+        );
+        const dto = new CreateTaskDto({
             title: "New task",
             description: "Add feature",
-            author: fixture.manager,
+            authorId: fixture.manager.id,
             key: "LW-1001",
-            ...dto
+            ...dtoParams
         });
+        await createTask.execute(dto);
     }
 });

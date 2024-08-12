@@ -15,7 +15,7 @@ describe("AssignTaskToScheduleUseCase", () => {
         fake = createFake();
         fixture = createFixture();
 
-        fake.employers.set(fixture.programmer);
+        fake.employees.set(fixture.programmer);
         fake.tasks.set(fixture.task);
         fake.schedules.set(fixture.schedule);
     });
@@ -109,7 +109,7 @@ describe("AssignTaskToScheduleUseCase", () => {
 
     it("should assign tasks on same time for different employees", async () => {
         // Arrange
-        fake.employers.set(fixture.programmer2);
+        fake.employees.set(fixture.programmer2);
         const sameTime = fixture.wholeDay;
         await assignTaskToSchedule({
             time: sameTime,
@@ -194,7 +194,7 @@ describe("AssignTaskToScheduleUseCase", () => {
         const assignTaskToSchedule = new AssignTaskToScheduleUseCase(
             fake.schedules,
             fake.tasks,
-            fake.employers
+            fake.employees
         );
         await assignTaskToSchedule.execute({
             employeeId: fixture.programmer.id,
