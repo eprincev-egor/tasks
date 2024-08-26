@@ -7,7 +7,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
  */
 module.exports = {
     entry: {
-        AllTasksPageView: "./src/task/view/css/AllTasksPageView.css"
+        AllTasksPageView: "./src/task/view/css/AllTasksPageView.css",
+        AllEmployeesPageView: "./src/employee/view/css/AllEmployeesPageView.css"
     },
     mode: "production",
     devtool: "source-map",
