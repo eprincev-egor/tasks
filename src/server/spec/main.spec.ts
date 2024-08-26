@@ -7,6 +7,7 @@ import { DataSource } from "typeorm";
 import { TaskModel } from "../../task/model";
 import { TypeormEmployeeRepository } from "../../employee/repository/typeorm";
 import { EmployeeModel } from "../../employee/model";
+import { MainFixture } from "./main.fixture";
 import { strict } from "assert";
 
 describe("integration tests", () => {
@@ -16,6 +17,7 @@ describe("integration tests", () => {
     let appPort: number;
     let employees: TypeormEmployeeRepository;
     let tasks: TypeormTaskRepository;
+    let fixture: MainFixture;
     before(async () => {
         configDotenv({ path: ".env-test.ini" });
         appPort = Number(process.env.APP_PORT);
@@ -38,45 +40,40 @@ describe("integration tests", () => {
 
         employees = new TypeormEmployeeRepository(orm.getRepository(EmployeeModel));
         tasks = new TypeormTaskRepository(orm.getRepository(TaskModel));
+
+        fixture = new MainFixture();
     });
 
     it("should create employee", async () => {
-        // Arrange
-        const employeeName = "Oliver Twist";
-
         // Act
-        await PUT("/employees", { name: employeeName });
+        await PUT("/employees", { name: fixture.manager.name });
 
         // Assert
-        const createdEmployee = await employees.findOneByName(employeeName);
+        const createdEmployee = await employees.findOneByName(fixture.manager.name);
         strict.ok(createdEmployee);
     });
 
     it("should create task", async () => {
         // Arrange
-        const manager = EmployeeModel.create("Bob Manager");
-        const taskKey = "LW-1001";
-        await employees.save(manager);
+        await employees.save(fixture.manager);
 
         // Act
         await PUT("/tasks", {
-            key: taskKey,
-            title: "Some Task",
-            description: "Add feature",
-            authorId: manager.id
+            key: fixture.task.key,
+            title: fixture.task.title,
+            description: fixture.task.description,
+            authorId: fixture.task.author.id
         });
 
         // Assert
-        const createdTask = await tasks.findOneByKey(taskKey);
+        const createdTask = await tasks.findOneByKey(fixture.task.key);
         strict.ok(createdTask);
     });
 
     async function PUT(url: string, body: any) {
         await fetch(`http://localhost:${appPort}${url}`, {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         });
     }
