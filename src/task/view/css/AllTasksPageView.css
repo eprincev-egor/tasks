@@ -1,6 +1,7 @@
 @import url("../../../common/view/css/reset.css");
 @import url("../../../common/view/css/fonts/chopin/index.css");
 @import url("../../../common/view/css/fonts/lineawesome/index.css");
+@import url("../component/input/InputView.css");
 
 body {
     background: black;
@@ -19,4 +20,36 @@ body {
     padding: 20px 20px;
     box-shadow: 0 0 20px #00000026;
     border-radius: 5px;
+}
+
+.AllTasksPageView--tasks {
+    display: table;
+}
+
+.AllTasksPageView--taskRow,
+.AllTasksPageView--tasksHead,
+.AllTasksPageView--tasksNewRow {
+    display: table-row;
+}
+
+.AllTasksPageView--taskRow:nth-child(even) {
+    background-color: #f1ecec;
+}
+
+.AllTasksPageView--taskCell,
+.AllTasksPageView--taskColumn,
+.AllTasksPageView--taskNewRowCell {
+    display: table-cell;
+}
+.AllTasksPageView--taskCell,
+.AllTasksPageView--taskColumn {
+    padding: 6px 12px;
+}
+
+.AllTasksPageView--taskColumn {
+    font-weight: bold;
+}
+
+.AllTasksPageView--taskColumn {
+    border-bottom: 1px solid #ddd;
 }

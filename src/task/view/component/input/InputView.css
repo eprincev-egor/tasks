@@ -1,0 +1,16 @@
+
+.InputView {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 1px solid #ddd;
+    padding: 6px 12px;
+    box-sizing: border-box;
+    transition: border-color .15s;
+}
+
+.InputView:focus {
+    border-bottom: 2px solid #4ca7fd;
+    padding-bottom: 5px;
+}
