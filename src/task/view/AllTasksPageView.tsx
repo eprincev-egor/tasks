@@ -1,62 +1,46 @@
-import React from "react";
+import { AbstractPageView } from "../../common/view/page";
 import { AllTasksPageViewModel, TaskViewModel } from "./model";
-import { InputView } from "./component/input";
+import { InputView } from "../../common/view/component/input";
 import { AllTasksPageController } from "./controller";
+import React from "react";
 import { observer } from "mobx-react";
 
 @observer
-export class AllTasksPageView extends React.Component<{
+export class AllTasksPageView extends AbstractPageView<{
     model: AllTasksPageViewModel;
 }> {
-    private model = this.props.model;
     private controller = new AllTasksPageController(this.model);
+    protected title = "All tasks";
+    protected jsBundleName = "main.allTasks";
+    protected cssBundleName = "AllTasksPageView";
 
-    render() {
-        return <html lang="en">
-            <head>
-                <meta charSet="utf8"/>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <title>All tasks</title>
-                <link rel="stylesheet" href="/AllTasksPageView.css" />
-            </head>
-            <body>
-                <div className="AllTasksPageView">
-                    <h1 className="AllTasksPageView--title">All tasks</h1>
-                    <div className="AllTasksPageView--tasks">
-                        <div className="AllTasksPageView--tasksHead">
-                            <div className="AllTasksPageView--taskColumn">Key</div>
-                            <div className="AllTasksPageView--taskColumn">Title</div>
-                        </div>
-                        {this.model.tasks.map(renderTask)}
+    renderContent() {
+        return <div className="AllTasksPageView--tasks">
+            <div className="AllTasksPageView--tasksHead">
+                <div className="AllTasksPageView--taskColumn">Key</div>
+                <div className="AllTasksPageView--taskColumn">Title</div>
+            </div>
+            {this.model.tasks.map(renderTask)}
 
-                        <div className="AllTasksPageView--tasksNewRow">
-                            <div className="AllTasksPageView--taskNewRowCell">
-                                <InputView
-                                    placeholder="Enter new task key*"
-                                    value={this.model.newTaskKey}
-                                    onChange={(value) => this.controller.onChangeNewTaskKey(value)}
-                                    onKeyDown={(keyCode) => this.controller.onKeyUpDownTaskInput(keyCode)}
-                                />
-                            </div>
-                            <div className="AllTasksPageView--taskNewRowCell">
-                                <InputView
-                                    placeholder="Enter new task title*"
-                                    value={this.model.newTaskTitle}
-                                    onChange={(value) => this.controller.onChangeNewTaskTitle(value)}
-                                    onKeyDown={(keyCode) => this.controller.onKeyUpDownTaskInput(keyCode)}
-                                />
-                            </div>
-                        </div>
-                    </div>
+            <div className="AllTasksPageView--tasksNewRow">
+                <div className="AllTasksPageView--taskNewRowCell">
+                    <InputView
+                        placeholder="Enter new task key*"
+                        value={this.model.newTaskKey}
+                        onChange={(value) => this.controller.onChangeNewTaskKey(value)}
+                        onKeyDown={(keyCode) => this.controller.onKeyUpDownTaskInput(keyCode)}
+                    />
                 </div>
-
-                <script dangerouslySetInnerHTML={{
-                    __html: "window.rootModel = " + JSON.stringify(this.model)
-                        .replaceAll(/<\s*\/\s*script\s*>/gi, "<\\/script>")
-                }}></script>
-                <script src="/main.allTasks.js"></script>
-            </body>
-        </html>;
+                <div className="AllTasksPageView--taskNewRowCell">
+                    <InputView
+                        placeholder="Enter new task title*"
+                        value={this.model.newTaskTitle}
+                        onChange={(value) => this.controller.onChangeNewTaskTitle(value)}
+                        onKeyDown={(keyCode) => this.controller.onKeyUpDownTaskInput(keyCode)}
+                    />
+                </div>
+            </div>
+        </div>;
     }
 }
 
