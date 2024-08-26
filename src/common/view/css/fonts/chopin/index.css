@@ -1,0 +1,6 @@
+@font-face {
+    font-family: "Chopin";
+    font-style: normal;
+    font-display: block;
+    src: url("./chopin-light.ttf") format("truetype");
+}

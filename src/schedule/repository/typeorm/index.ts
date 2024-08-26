@@ -1,1 +1,1 @@
-export * from "./TypeormTaskRepository";
+export * from "./TypeormScheduleRepository";

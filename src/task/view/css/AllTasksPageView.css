@@ -1,0 +1,22 @@
+@import url("../../../common/view/css/reset.css");
+@import url("../../../common/view/css/fonts/chopin/index.css");
+@import url("../../../common/view/css/fonts/lineawesome/index.css");
+
+body {
+    background: black;
+    background: rgb(242,226,246);
+    background: linear-gradient(90deg, rgba(242,226,246,1) 0%, rgba(220,237,253,1) 40%, rgba(220,237,253,1) 60%, rgba(222,245,238,1) 100%);
+    font-family: Chopin;
+}
+
+.AllTasksPageView {
+    position: relative;
+    top: 140px;
+    max-width: 1024px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid #dfdfdf;
+    padding: 20px 20px;
+    box-shadow: 0 0 20px #00000026;
+    border-radius: 5px;
+}

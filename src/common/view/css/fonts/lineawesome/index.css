@@ -1,0 +1,8 @@
+@font-face {
+  font-family: LineAwesome;
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("./la-solid-900.woff2") format("woff2"), 
+       url("./la-solid-900.ttf") format("truetype");
+}
