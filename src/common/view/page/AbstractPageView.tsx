@@ -19,7 +19,7 @@ export abstract class AbstractPageView<TProperties extends {model: any}>
             </head>
             <body>
                 <div className="AbstractPageView">
-                    <h1 className="AbstractPageView--title">All tasks</h1>
+                    <h1 className="AbstractPageView--title">{this.title}</h1>
                     {this.renderContent()}
                 </div>
 

@@ -7,6 +7,7 @@ export type GridColumn<TModel> = NonNullable<AgGridReactProps<TModel>["columnDef
 export function Grid<TModel extends {id: string}>(properties: {
     rows: TModel[];
     columns: GridColumn<TModel>[];
+    onRowCreate?: (row: Record<string,any>) => Promise<void> | void;
 }) {
     const newRow: Record<string, any> = {};
     return <div className="Grid ag-theme-quartz">
@@ -23,7 +24,8 @@ export function Grid<TModel extends {id: string}>(properties: {
             }}
             onCellEditingStopped={event => {
                 if ( event.rowPinned === "bottom" ) {
-                    console.log(event);
+                    newRow[event.colDef.field!] = event.newValue;
+                    void properties.onRowCreate?.(newRow);
                 }
             }}
         />
