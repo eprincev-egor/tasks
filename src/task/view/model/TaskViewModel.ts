@@ -3,6 +3,7 @@ import { makeObservable, observable } from "mobx";
 
 export class TaskViewModel {
 
+    id!: string;
     key!: string;
     title!: string;
 
@@ -16,5 +17,9 @@ export class TaskViewModel {
             key: observable,
             title: observable
         });
+    }
+
+    setTitle(newTitle: string) {
+        this.title = newTitle;
     }
 }

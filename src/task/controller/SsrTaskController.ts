@@ -12,10 +12,12 @@ export class SsrTaskController {
             model: new AllTasksPageViewModel({
                 tasks: [
                     new TaskViewModel({
+                        id: "1",
                         key: "LW-1001",
                         title: "Some task"
                     }),
                     new TaskViewModel({
+                        id: "2",
                         key: "LW-1002",
                         title: "Another task"
                     })

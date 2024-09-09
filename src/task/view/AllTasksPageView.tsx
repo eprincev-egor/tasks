@@ -1,9 +1,18 @@
 import { AbstractPageView } from "../../common/view/page";
 import { AllTasksPageViewModel, TaskViewModel } from "./model";
-import { InputView } from "../../common/view/component/input";
 import { AllTasksPageController } from "./controller";
 import React from "react";
+import { Grid, GridColumn } from "../../common/view/component/grid";
 import { observer } from "mobx-react";
+
+const columns: GridColumn<TaskViewModel>[] = [
+    {field: "key", headerName: "Key", width: 90, editable: true},
+    {field: "title", headerName: "Title", editable: true, valueSetter: event => {
+        const task = event.data;
+        task.setTitle(event.newValue as string);
+        return true;
+    }}
+];
 
 @observer
 export class AllTasksPageView extends AbstractPageView<{
@@ -16,37 +25,10 @@ export class AllTasksPageView extends AbstractPageView<{
 
     renderContent() {
         return <div className="AllTasksPageView--tasks">
-            <div className="AllTasksPageView--tasksHead">
-                <div className="AllTasksPageView--taskColumn">Key</div>
-                <div className="AllTasksPageView--taskColumn">Title</div>
-            </div>
-            {this.model.tasks.map(renderTask)}
-
-            <div className="AllTasksPageView--tasksNewRow">
-                <div className="AllTasksPageView--taskNewRowCell">
-                    <InputView
-                        placeholder="Enter new task key*"
-                        value={this.model.newTaskKey}
-                        onChange={(value) => this.controller.onChangeNewTaskKey(value)}
-                        onKeyDown={(keyCode) => this.controller.onKeyUpDownTaskInput(keyCode)}
-                    />
-                </div>
-                <div className="AllTasksPageView--taskNewRowCell">
-                    <InputView
-                        placeholder="Enter new task title*"
-                        value={this.model.newTaskTitle}
-                        onChange={(value) => this.controller.onChangeNewTaskTitle(value)}
-                        onKeyDown={(keyCode) => this.controller.onKeyUpDownTaskInput(keyCode)}
-                    />
-                </div>
-            </div>
+            <Grid
+                columns={columns}
+                rows={this.model.tasks}
+            />
         </div>;
     }
-}
-
-function renderTask(task: TaskViewModel) {
-    return <div className="AllTasksPageView--taskRow" key={task.key}>
-        <div className="AllTasksPageView--taskCell">{task.key}</div>
-        <div className="AllTasksPageView--taskCell">{task.title}</div>
-    </div>;
 }

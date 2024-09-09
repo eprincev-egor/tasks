@@ -10,6 +10,8 @@ export class AllEmployeesPageView extends AbstractPageView<{
     protected cssBundleName = "AllEmployeesPageView";
 
     renderContent() {
-        return <p>All employees</p>;
+        return <div class="AllEmployeesPageView--employees">
+
+        </div>;
     }
 }

@@ -1,0 +1,38 @@
+@import url("../../../../../../node_modules/ag-grid-community/styles/ag-grid.css");
+@import url("../../../../../../node_modules/ag-grid-community/styles/ag-theme-quartz.css");
+
+.Grid {
+    height: 600px;
+}
+
+.Grid .ag-root-wrapper,
+.Grid .ag-row-odd,
+.Grid .ag-row,
+.Grid .ag-header, 
+.Grid .ag-advanced-filter-header {
+    background-color: transparent;
+}
+
+
+.Grid .ag-row:nth-child(odd) {
+    background-color: #f1ecec;
+}
+
+.Grid .ag-floating-bottom .ag-row {
+    background-color: transparent;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.Grid .ag-floating-bottom .ag-cell:first-child::before {
+    content: "\f067";
+    font-family: LineAwesome;
+    color: #0093ff;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+}
+
+.Grid .ag-floating-bottom .ag-cell.ag-cell-inline-editing:first-child::before  {
+    display: none;
+}
