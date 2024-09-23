@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { configDotenv } from "dotenv";
 import {Client} from "pg";
 import { migrate } from "../migrate";
@@ -8,6 +9,7 @@ import { TaskModel } from "../../task/model";
 import { TypeormEmployeeRepository } from "../../employee/repository/typeorm";
 import { EmployeeModel } from "../../employee/model";
 import { MainFixture } from "./main.fixture";
+import { AuthClient } from "@gsoft/auth";
 import { strict } from "assert";
 
 describe("integration tests", () => {
@@ -18,6 +20,7 @@ describe("integration tests", () => {
     let employees: TypeormEmployeeRepository;
     let tasks: TypeormTaskRepository;
     let fixture: MainFixture;
+    let originalAuthorize: AuthClient["authorize"];
     before(async () => {
         configDotenv({ path: ".env-test.ini" });
         appPort = Number(process.env.APP_PORT);
@@ -30,7 +33,19 @@ describe("integration tests", () => {
         });
         await pg.connect();
 
+        originalAuthorize = AuthClient.prototype.authorize;
+        AuthClient.prototype.authorize = async function() {
+            return {
+                userId: fixture.manager.id,
+                value: "",
+                expiredDate: ""
+            };
+        };
+
         await main();
+    });
+    after(() => {
+        AuthClient.prototype.authorize = originalAuthorize;
     });
 
     beforeEach(async () => {
