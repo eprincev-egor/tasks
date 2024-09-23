@@ -2,6 +2,7 @@ import React from "react";
 import { hydrateRoot } from "react-dom/client";
 import { AllEmployeesPageView } from "../employee/view";
 import { AllEmployeesPageViewModel } from "../employee/view/model";
+import { BrowserFetchHttpDriver } from "../common/driver/http/browser-fetch";
 
 function main() {
     const global = window as any as {rootModel: Record<string, any>; pageModel: any};
@@ -10,7 +11,9 @@ function main() {
     // for debug only
     global.pageModel = pageModel;
 
-    hydrateRoot(document, <AllEmployeesPageView model={pageModel}/>);
+    const http = new BrowserFetchHttpDriver();
+
+    hydrateRoot(document, <AllEmployeesPageView model={pageModel} http={http}/>);
 }
 
 main();

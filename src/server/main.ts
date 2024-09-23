@@ -5,7 +5,7 @@ import { CreateTaskUseCase } from "../task/use-case";
 import { TaskModel } from "../task/model";
 import { TypeormTaskRepository } from "../task/repository/typeorm";
 import { TypeormEmployeeRepository } from "../employee/repository/typeorm";
-import { CreateEmployeeUseCase } from "../employee/use-case";
+import { CreateEmployeeUseCase, UpdateEmployeeUseCase } from "../employee/use-case";
 import { EmployeeModel } from "../employee/model";
 import { migrate } from "./migrate";
 import { MainModule } from "./MainModule";
@@ -22,7 +22,9 @@ export async function main() {
         db.getRepository(TaskModel)
     );
 
+    EmployeeModule.employees = employees;
     EmployeeModule.createEmployee = new CreateEmployeeUseCase(employees);
+    EmployeeModule.updateEmployee = new UpdateEmployeeUseCase(employees);
     TaskModule.createTask = new CreateTaskUseCase(employees, tasks);
 
     const server = await NestFactory.create(MainModule);

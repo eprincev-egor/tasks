@@ -16,7 +16,7 @@ export class BaseFakeRepository<TModel extends { id: string }> {
     /* istanbul ignore next */
     /** ASSERT UTILS FOR TESTS ONLY: throw error if model was not saved with concrete data */
     wasSaved(expectedModel: DeepPartial<TModel>) {
-        const actualBestMatchedModel = this.models.filter((model) =>
+        const actualBestMatchedModel = this.models.filter(model =>
             matchedFields(model, expectedModel).length > 0
         ).sort((a, b) =>
             matchedFields(a, expectedModel).length -
@@ -31,7 +31,7 @@ export class BaseFakeRepository<TModel extends { id: string }> {
     /* istanbul ignore next */
     /** ASSERT UTILS FOR TESTS ONLY: throw error if model was saved */
     wasNotSaved(expectedModel: Partial<TModel>) {
-        const savedModel = this.models.find((model) =>
+        const savedModel = this.models.find(model =>
             matchedFields(model, expectedModel).length === Object.keys(expectedModel).length
         );
         const wasSaved = savedModel && savedModel.id in this.savesMap;
@@ -39,6 +39,11 @@ export class BaseFakeRepository<TModel extends { id: string }> {
             !wasSaved,
             `should NOT be saved model: ${JSON.stringify(expectedModel, null, 4)}`
         );
+    }
+
+    /** ASSERT UTILS FOR TESTS ONLY: get all models */
+    getAll() {
+        return clone(this.models);
     }
 
     /** ASSERT UTILS FOR TESTS ONLY: get last version of saved model by any condition */
@@ -53,7 +58,7 @@ export class BaseFakeRepository<TModel extends { id: string }> {
 
     /** ASSERT UTILS FOR TESTS ONLY: insert or update model into memory */
     set(model: TModel) {
-        this.models = this.models.filter((existent) => existent.id !== model.id);
+        this.models = this.models.filter(existent => existent.id !== model.id);
         this.models.push(clone(model));
     }
 }
